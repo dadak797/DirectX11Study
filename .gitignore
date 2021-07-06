@@ -1,7 +1,7 @@
 # Directories
-.vs/
-bin/
-bin-int/
+InitDirect3D/.vs/
+InitDirect3D/bin/
+InitDirect3D/bin-int/
 
 # Files
 *.user
