@@ -48,18 +48,27 @@ protected:
     GameTimer m_Timer;
 
     ID3D11Device* m_D3DDevice;
-    ID3D11DeviceContext* m_D3DImmediateContext;
+    ID3D11DeviceContext* m_D3DDeviceContext;
     IDXGISwapChain* m_SwapChain;
     ID3D11Texture2D* m_DepthStencilBuffer;
+    ID3D11DepthStencilState* m_DepthStencilState;
     ID3D11RenderTargetView* m_RenderTargetView;
     ID3D11DepthStencilView* m_DepthStencilView;
     D3D11_VIEWPORT m_ScreenViewport;
+    ID3D11RasterizerState* m_RasterState;
 
     // Derived class should set these in derived constructor to customize starting values.
     std::wstring m_MainWndCaption;
     D3D_DRIVER_TYPE m_D3DDriverType;
     int m_ClientWidth, m_ClientHeight;
-    bool m_bFullScreen;
     bool m_bEnable4xMsaa;
+
+    bool m_bFullScreen;
+    bool m_VSyncEnabled;
+    float m_ScreenDepth, m_ScreenNear;
+    int m_VideoCardMemory;
+    char m_VideoCardDescription[128];
+
+    XMMATRIX m_ProjectionMatrix, m_WorldMatrix, m_OrthoMatrix;
 };
 
