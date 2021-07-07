@@ -9,9 +9,9 @@ public:
     InitDirect3DApp(HINSTANCE hInstance);
     ~InitDirect3DApp();
 
-    bool Initialize();
-    void OnResize();
-    void UpdateScene(float dt);
-    void DrawScene();
+    bool Initialize() override;
+    void OnResize() override;
+    void UpdateScene(float dt) override;
+    void DrawScene() override;
 };
 

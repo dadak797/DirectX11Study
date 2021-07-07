@@ -60,8 +60,7 @@ protected:
     // Derived class should set these in derived constructor to customize starting values.
     std::wstring m_MainWndCaption;
     D3D_DRIVER_TYPE m_D3DDriverType;
-    int m_ClientWidth, m_ClientHeight;
-    int m_InitWidth, m_InitHeight;
+    int m_InitWidth, m_InitHeight, m_ClientWidth, m_ClientHeight;
     bool m_bEnable4xMsaa;
 
     bool m_bFullScreen;

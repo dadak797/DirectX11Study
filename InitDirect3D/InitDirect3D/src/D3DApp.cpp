@@ -3,7 +3,6 @@
 #include "D3DApp.h"
 #include <dxgi.h>
 #include <windowsx.h>
-//#include <d3dcommon.h>
 
 
 namespace
