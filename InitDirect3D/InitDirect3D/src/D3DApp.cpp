@@ -197,11 +197,6 @@ bool D3DApp::InitMainWindow()
     return true;
 }
 
-void D3DApp::OnResize()
-{
-
-}
-
 LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
@@ -474,6 +469,44 @@ bool D3DApp::InitDirect3D()
     HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, featureLevels, ARRAYSIZE(featureLevels),
           D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_D3DDevice, &selectedFeatureLevel, &m_D3DDeviceContext));
 
+    // The remaining steps that need to be carried out for d3d creation
+    // also need to be executed every time the window is resized.  So
+    // just call the OnResize method here to avoid code duplication.
+    OnResize();
+
+    // Setup the projection matrix.
+    float fieldOfView = static_cast<float>(XM_PI) / 4.0f;
+    float screenAspect = static_cast<float>(m_ClientWidth) / static_cast<float>(m_ClientHeight);
+
+    // Create the projection matrix for 3D rendering.
+    m_ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, m_ScreenNear, m_ScreenDepth);
+
+    // Initialize the world matrix to the identity matrix.
+    m_WorldMatrix = XMMatrixIdentity();
+
+    // Create an orthographic projection matrix for 2D rendering.
+    m_OrthoMatrix = XMMatrixOrthographicLH(static_cast<float>(m_ClientWidth), static_cast<float>(m_ClientHeight), m_ScreenNear, m_ScreenDepth);
+
+    return true;
+}
+
+void D3DApp::OnResize()
+{
+    assert(m_D3DDevice);
+    assert(m_D3DDeviceContext);
+    assert(m_SwapChain);
+
+    // Release the old views, as they hold references to the buffers we
+    // will be destroying.  Also release the old depth/stencil buffer.
+    ReleaseCOM(m_RasterState);
+    ReleaseCOM(m_DepthStencilView);
+    ReleaseCOM(m_DepthStencilState);
+    ReleaseCOM(m_DepthStencilBuffer);
+    ReleaseCOM(m_RenderTargetView);
+
+    // Resize the swap chain and recreate the render target view.
+    HR(m_SwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+
     // Get the pointer to the back buffer.
     ID3D11Texture2D* backBufferPtr;
     HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr));
@@ -489,8 +522,8 @@ bool D3DApp::InitDirect3D()
     ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
     // Set up the description of the depth buffer.
-    depthBufferDesc.Width = m_InitWidth;
-    depthBufferDesc.Height = m_InitHeight;
+    depthBufferDesc.Width = m_ClientWidth;
+    depthBufferDesc.Height = m_ClientHeight;
     depthBufferDesc.MipLevels = 1;
     depthBufferDesc.ArraySize = 1;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -571,8 +604,8 @@ bool D3DApp::InitDirect3D()
 
     // Setup the viewport for rendering.
     D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast<float>(m_InitWidth);
-    viewport.Height = static_cast<float>(m_InitHeight);
+    viewport.Width = static_cast<float>(m_ClientWidth);
+    viewport.Height = static_cast<float>(m_ClientHeight);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0.0f;
@@ -580,27 +613,6 @@ bool D3DApp::InitDirect3D()
 
     // Create the viewport.
     m_D3DDeviceContext->RSSetViewports(1, &viewport);
-
-    // Setup the projection matrix.
-    float fieldOfView = static_cast<float>(XM_PI) / 4.0f;
-    float screenAspect = static_cast<float>(m_InitWidth) / static_cast<float>(m_InitHeight);
-
-    // Create the projection matrix for 3D rendering.
-    m_ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, m_ScreenNear, m_ScreenDepth);
-
-    // Initialize the world matrix to the identity matrix.
-    m_WorldMatrix = XMMatrixIdentity();
-
-    // Create an orthographic projection matrix for 2D rendering.
-    m_OrthoMatrix = XMMatrixOrthographicLH(static_cast<float>(m_InitWidth), static_cast<float>(m_InitHeight), m_ScreenNear, m_ScreenDepth);
-
-    // The remaining steps that need to be carried out for d3d creation
-    // also need to be executed every time the window is resized.  So
-    // just call the OnResize method here to avoid code duplication.
-
-    OnResize();
-
-    return true;
 }
 
 void D3DApp::CalculateFrameStats()
