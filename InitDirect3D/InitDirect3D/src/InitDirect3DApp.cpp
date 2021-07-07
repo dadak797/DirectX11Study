@@ -24,6 +24,8 @@ bool InitDirect3DApp::Initialize()
 void InitDirect3DApp::OnResize()
 {
     D3DApp::OnResize();
+
+    //DrawScene();  // For continuous view updating
 }
 
 void InitDirect3DApp::UpdateScene(float dt)
@@ -39,5 +41,12 @@ void InitDirect3DApp::DrawScene()
     m_D3DDeviceContext->ClearRenderTargetView(m_RenderTargetView, reinterpret_cast<const float*>(&Colors::LightSteelBlue));
     m_D3DDeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    HR(m_SwapChain->Present(0, 0));
+    if (m_VSyncEnabled)
+    {
+        HR(m_SwapChain->Present(1, 0));
+    }
+    else
+    {
+        HR(m_SwapChain->Present(0, 0));
+    }
 }

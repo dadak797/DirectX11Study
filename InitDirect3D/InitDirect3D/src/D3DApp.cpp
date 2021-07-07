@@ -3,6 +3,7 @@
 #include "D3DApp.h"
 #include <dxgi.h>
 #include <windowsx.h>
+//#include <d3dcommon.h>
 
 
 namespace
@@ -24,7 +25,7 @@ D3DApp::D3DApp(HINSTANCE hInstance)
     : m_hAppInstance(hInstance)
     , m_MainWndCaption(L"DirectX11 Application")
     , m_D3DDriverType(D3D_DRIVER_TYPE_HARDWARE)
-    , m_ClientWidth(800), m_ClientHeight(600), m_bFullScreen(false)
+    , m_InitWidth(800), m_InitHeight(600), m_ClientWidth(m_InitWidth), m_ClientHeight(m_InitHeight), m_bFullScreen(false)
     , m_bEnable4xMsaa(false), m_4xMsaaQuality(0)
     , m_hMainWnd(0)
     , m_bAppPaused(false)
@@ -169,22 +170,15 @@ bool D3DApp::InitMainWindow()
     }
     else
     {
-        m_ClientWidth = 800;
-        m_ClientHeight = 600;
-
         // Place the window in the middle of the screen.
-        originPosX = (GetSystemMetrics(SM_CXSCREEN) - m_ClientWidth) / 2;
-        originPosY = (GetSystemMetrics(SM_CYSCREEN) - m_ClientHeight) / 2;
+        originPosX = (GetSystemMetrics(SM_CXSCREEN) - m_InitWidth) / 2;
+        originPosY = (GetSystemMetrics(SM_CYSCREEN) - m_InitHeight) / 2;
     }
 
     // Create the window with the screen settings and get the handle to it.
     m_hMainWnd = CreateWindowEx(WS_EX_APPWINDOW, L"D3DAppClass", m_MainWndCaption.c_str(),
-        WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        originPosX, originPosY, m_ClientWidth, m_ClientHeight, NULL, NULL, m_hAppInstance, NULL);
-
-    // Why width and height are changed??
-    m_ClientWidth = 800;
-    m_ClientHeight = 600;
+        /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX*/WS_OVERLAPPEDWINDOW,
+        originPosX, originPosY, m_InitWidth, m_InitHeight, NULL, NULL, m_hAppInstance, NULL);
 
     if (!m_hMainWnd)
     {
@@ -275,6 +269,8 @@ LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     // the resize bars.  So instead, we reset after the user is 
                     // done resizing the window and releases the resize bars, which 
                     // sends a WM_EXITSIZEMOVE message.
+
+                    //OnResize();  // For continuous view updating
                 }
                 else // API call such as SetWindowPos or mSwapChain->SetFullscreenState.
                 {
@@ -362,11 +358,12 @@ bool D3DApp::InitDirect3D()
     // Now go through all the display modes and find the one that matches the screen width and height.
     // When a match is found store the numerator and denominator of the refresh rate for that monitor.
     unsigned int numerator, denominator;
+
     for (unsigned int i = 0; i < numModes; i++)
     {
-        if (displayModeList[i].Width == static_cast<unsigned int>(m_ClientWidth))
+        if (displayModeList[i].Width == static_cast<unsigned int>(m_InitWidth))
         {
-            if (displayModeList[i].Height == static_cast<unsigned int>(m_ClientHeight))
+            if (displayModeList[i].Height == static_cast<unsigned int>(m_InitHeight))
             {
                 numerator = displayModeList[i].RefreshRate.Numerator;
                 denominator = displayModeList[i].RefreshRate.Denominator;
@@ -410,8 +407,8 @@ bool D3DApp::InitDirect3D()
     swapChainDesc.BufferCount = 1;
 
     // Set the width and height of the back buffer.
-    swapChainDesc.BufferDesc.Width = m_ClientWidth;
-    swapChainDesc.BufferDesc.Height = m_ClientHeight;
+    swapChainDesc.BufferDesc.Width = m_InitWidth;
+    swapChainDesc.BufferDesc.Height = m_InitHeight;
 
     // Set regular 32-bit surface for the back buffer.
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -493,8 +490,8 @@ bool D3DApp::InitDirect3D()
     ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
     // Set up the description of the depth buffer.
-    depthBufferDesc.Width = m_ClientWidth;
-    depthBufferDesc.Height = m_ClientHeight;
+    depthBufferDesc.Width = m_InitWidth;
+    depthBufferDesc.Height = m_InitHeight;
     depthBufferDesc.MipLevels = 1;
     depthBufferDesc.ArraySize = 1;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -575,8 +572,8 @@ bool D3DApp::InitDirect3D()
 
     // Setup the viewport for rendering.
     D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast<float>(m_ClientWidth);
-    viewport.Height = static_cast<float>(m_ClientHeight);
+    viewport.Width = static_cast<float>(m_InitWidth);
+    viewport.Height = static_cast<float>(m_InitHeight);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0.0f;
@@ -587,7 +584,7 @@ bool D3DApp::InitDirect3D()
 
     // Setup the projection matrix.
     float fieldOfView = static_cast<float>(XM_PI) / 4.0f;
-    float screenAspect = static_cast<float>(m_ClientWidth) / static_cast<float>(m_ClientHeight);
+    float screenAspect = static_cast<float>(m_InitWidth) / static_cast<float>(m_InitHeight);
 
     // Create the projection matrix for 3D rendering.
     m_ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, m_ScreenNear, m_ScreenDepth);
@@ -596,7 +593,7 @@ bool D3DApp::InitDirect3D()
     m_WorldMatrix = XMMatrixIdentity();
 
     // Create an orthographic projection matrix for 2D rendering.
-    m_OrthoMatrix = XMMatrixOrthographicLH(static_cast<float>(m_ClientWidth), static_cast<float>(m_ClientHeight), m_ScreenNear, m_ScreenDepth);
+    m_OrthoMatrix = XMMatrixOrthographicLH(static_cast<float>(m_InitWidth), static_cast<float>(m_InitHeight), m_ScreenNear, m_ScreenDepth);
 
     // The remaining steps that need to be carried out for d3d creation
     // also need to be executed every time the window is resized.  So
