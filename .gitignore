@@ -2,6 +2,9 @@
 InitDirect3D/.vs/
 InitDirect3D/bin/
 InitDirect3D/bin-int/
+DrawingExamples/.vs/
+DrawingExamples/bin/
+DrawingExamples/bin-int/
 
 # Files
 *.user
