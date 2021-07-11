@@ -6,11 +6,12 @@
     #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <windows.h>
+#include <Windows.h>
 #include <d3d11.h>
 #include <sstream>
 #include <cassert>
 #include <DirectXMath.h>
+#include <vector>
 
 using namespace DirectX;
 

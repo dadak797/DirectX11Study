@@ -24,9 +24,6 @@
     <ClCompile Include="src\GameTimer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoxApp.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\ColorShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -36,7 +33,16 @@
     <ClCompile Include="src\MathHelper.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model.cpp">
+    <ClCompile Include="src\DrawingApp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoxModel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HillsModel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GeometryGenerator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,16 +56,22 @@
     <ClInclude Include="src\GameTimer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\BoxApp.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\ColorShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\MathHelper.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model.h">
+    <ClInclude Include="src\DrawingApp.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BoxModel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HillsModel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GeometryGenerator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

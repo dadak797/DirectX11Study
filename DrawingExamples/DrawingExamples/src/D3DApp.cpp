@@ -496,7 +496,7 @@ void D3DApp::OnResize()
     assert(m_D3DDeviceContext);
     assert(m_SwapChain);
     
-    //if (!m_D3DDevice || !m_D3DDeviceContext || !m_SwapChain) return;
+    if (!m_D3DDevice || !m_D3DDeviceContext || !m_SwapChain) return;
 
     // Release the old views, as they hold references to the buffers we
     // will be destroying.  Also release the old depth/stencil buffer.

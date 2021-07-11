@@ -1,13 +1,14 @@
-#include "BoxApp.h"
+#include "DrawingApp.h"
 #include "MathHelper.h"
 
 
-BoxApp::BoxApp(HINSTANCE hInstance)
+DrawingApp::DrawingApp(HINSTANCE hInstance)
     : D3DApp(hInstance)
-    , m_Model(new Model()), m_ColorShader(new ColorShader())
-    , m_Theta(1.5f * MathHelper::Pi), m_Phi(0.25f * MathHelper::Pi), m_Radius(5.0f)
+    , m_Model(new /*BoxModel()*/HillsModel()), m_ColorShader(new ColorShader())
+    , m_Theta(1.5f * MathHelper::Pi), m_Phi(/*0.25f*/0.1f * MathHelper::Pi), m_Radius(/*5.0f*/200.0f)
 {
-    m_MainWndCaption = L"Box Demo";
+    //m_MainWndCaption = L"Box Demo";
+    m_MainWndCaption = L"Hills Demo";
 
     m_LastMousePos.x = 0;
     m_LastMousePos.y = 0;
@@ -18,12 +19,13 @@ BoxApp::BoxApp(HINSTANCE hInstance)
     m_MatrixBuffer.projection = identity;
 }
 
-BoxApp::~BoxApp()
+DrawingApp::~DrawingApp()
 {
+    delete m_Model;
     delete m_ColorShader;
 }
 
-bool BoxApp::Initialize()
+bool DrawingApp::Initialize()
 {
     if (!D3DApp::Initialize())
     {
@@ -36,7 +38,7 @@ bool BoxApp::Initialize()
     return true;
 }
 
-void BoxApp::OnResize()
+void DrawingApp::OnResize()
 {
     D3DApp::OnResize();
 
@@ -44,7 +46,7 @@ void BoxApp::OnResize()
     m_MatrixBuffer.projection = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, GetAspectRatio(), m_ScreenNear, m_ScreenDepth);
 }
 
-void BoxApp::UpdateScene(float dt)
+void DrawingApp::UpdateScene(float dt)
 {
     // Convert Spherical to Cartesian coordinates.
     float x = m_Radius * sinf(m_Phi) * cosf(m_Theta);
@@ -59,7 +61,7 @@ void BoxApp::UpdateScene(float dt)
     m_MatrixBuffer.view = XMMatrixLookAtLH(pos, target, up);
 }
 
-void BoxApp::DrawScene()
+void DrawingApp::DrawScene()
 {
     assert(m_D3DDeviceContext);
     assert(m_SwapChain);
@@ -69,7 +71,7 @@ void BoxApp::DrawScene()
     m_D3DDeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     m_MatrixBuffer.world = m_WorldMatrix;
-    //m_MatrixBuffer.projection is updated in OnResize()
+    // m_MatrixBuffer.projection is updated in OnResize()
     // m_MatrixBuffer.view is updated in UpdateScene()
 
     m_Model->RenderBuffers(m_D3DDeviceContext);
@@ -88,7 +90,7 @@ void BoxApp::DrawScene()
     }
 }
 
-void BoxApp::OnMouseDown(WPARAM btnState, int x, int y)
+void DrawingApp::OnMouseDown(WPARAM btnState, int x, int y)
 {
     m_LastMousePos.x = x;
     m_LastMousePos.y = y;
@@ -96,12 +98,12 @@ void BoxApp::OnMouseDown(WPARAM btnState, int x, int y)
     SetCapture(m_hMainWnd);
 }
 
-void BoxApp::OnMouseUp(WPARAM btnState, int x, int y)
+void DrawingApp::OnMouseUp(WPARAM btnState, int x, int y)
 {
     ReleaseCapture();
 }
 
-void BoxApp::OnMouseMove(WPARAM btnState, int x, int y)
+void DrawingApp::OnMouseMove(WPARAM btnState, int x, int y)
 {
     if ((btnState & MK_LBUTTON) != 0)
     {
@@ -119,14 +121,14 @@ void BoxApp::OnMouseMove(WPARAM btnState, int x, int y)
     else if ((btnState & MK_RBUTTON) != 0)
     {
         // Make each pixel correspond to 0.005 unit in the scene.
-        float dx = 0.005f * static_cast<float>(x - m_LastMousePos.x);
-        float dy = 0.005f * static_cast<float>(y - m_LastMousePos.y);
+        float dx = /*0.005f*/0.2f * static_cast<float>(x - m_LastMousePos.x);
+        float dy = /*0.005f*/0.2f * static_cast<float>(y - m_LastMousePos.y);
 
         // Update the camera radius based on input.
         m_Radius -= dx - dy;
 
         // Restrict the radius.
-        m_Radius = MathHelper::Clamp(m_Radius, 3.0f, 15.0f);
+        m_Radius = MathHelper::Clamp(m_Radius, /*3.0f*/50.0f, /*15.0f*/500.0f);
     }
 
     m_LastMousePos.x = x;

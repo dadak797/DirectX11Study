@@ -130,19 +130,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\GeometryGenerator.cpp" />
+    <ClCompile Include="src\HillsModel.cpp" />
+    <ClCompile Include="src\BoxModel.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\ColorShader.cpp" />
-    <ClCompile Include="src\BoxApp.cpp" />
+    <ClCompile Include="src\DrawingApp.cpp" />
     <ClCompile Include="src\D3DApp.cpp" />
     <ClCompile Include="src\D3DUtil.cpp" />
     <ClCompile Include="src\GameTimer.cpp" />
     <ClCompile Include="src\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\GeometryGenerator.h" />
+    <ClInclude Include="src\HillsModel.h" />
+    <ClInclude Include="src\BoxModel.h" />
     <ClInclude Include="src\ColorShader.h" />
-    <ClInclude Include="src\BoxApp.h" />
+    <ClInclude Include="src\DrawingApp.h" />
     <ClInclude Include="src\D3DApp.h" />
     <ClInclude Include="src\D3DUtil.h" />
     <ClInclude Include="src\GameTimer.h" />

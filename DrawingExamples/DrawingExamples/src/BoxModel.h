@@ -3,17 +3,18 @@
 #include "D3DUtil.h"
 
 
-struct VertexType
+class BoxModel
 {
-    XMFLOAT3 position;
-    XMFLOAT4 color;
-};
+private:
+    struct VertexType
+    {
+        XMFLOAT3 position;
+        XMFLOAT4 color;
+    };
 
-class Model
-{
 public:
-    Model();
-    ~Model();
+    BoxModel();
+    ~BoxModel();
 
     bool InitializeBuffers(ID3D11Device* device);
     void RenderBuffers(ID3D11DeviceContext* deviceContext);
