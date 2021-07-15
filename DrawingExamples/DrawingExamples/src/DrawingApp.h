@@ -3,7 +3,8 @@
 #include "D3DApp.h"
 #include "ColorShader.h"
 //#include "BoxModel.h"
-#include "HillsModel.h"
+//#include "HillsModel.h"
+#include "ShapesModel.h"
 
 
 class DrawingApp : public D3DApp
@@ -23,7 +24,8 @@ public:
 
 private:
     //BoxModel* m_Model;
-    HillsModel* m_Model;
+    //HillsModel* m_Model;
+    ShapesModel* m_Model;
     ColorShader* m_ColorShader;
     MatrixBufferType m_MatrixBuffer;
 

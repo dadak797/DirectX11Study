@@ -19,7 +19,7 @@ public:
     bool InitializeShaders(ID3D11Device* device, HWND hWnd, LPCWSTR vertexShaderFile, LPCWSTR pixelShaderFile);
     void OutputShaderErrorMessage(ID3DBlob* errorMessage, HWND hWnd, LPCWSTR shaderFile);
     void SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
-    void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
+    void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, UINT indexOffset = 0, int vertexOffset = 0);
     
 protected:
     ID3D11VertexShader* m_VertexShader;

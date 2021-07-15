@@ -155,7 +155,7 @@ void ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
     deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_MatrixBuffer);
 }
 
-void ColorShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void ColorShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, UINT indexOffset, int vertexOffset)
 {
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_InputLayout);
@@ -165,5 +165,5 @@ void ColorShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCoun
     deviceContext->PSSetShader(m_PixelShader, NULL, 0);
 
     // Render the triangle.
-    deviceContext->DrawIndexed(indexCount, 0, 0);
+    deviceContext->DrawIndexed(indexCount, indexOffset, vertexOffset);
 }

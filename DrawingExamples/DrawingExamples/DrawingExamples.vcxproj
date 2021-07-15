@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ShapesModel.cpp" />
     <ClCompile Include="src\GeometryGenerator.cpp" />
     <ClCompile Include="src\HillsModel.cpp" />
     <ClCompile Include="src\BoxModel.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ShapesModel.h" />
     <ClInclude Include="src\GeometryGenerator.h" />
     <ClInclude Include="src\HillsModel.h" />
     <ClInclude Include="src\BoxModel.h" />

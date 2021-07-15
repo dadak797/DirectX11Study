@@ -4,11 +4,12 @@
 
 DrawingApp::DrawingApp(HINSTANCE hInstance)
     : D3DApp(hInstance)
-    , m_Model(new /*BoxModel()*/HillsModel()), m_ColorShader(new ColorShader())
-    , m_Theta(1.5f * MathHelper::Pi), m_Phi(/*0.25f*/0.1f * MathHelper::Pi), m_Radius(/*5.0f*/200.0f)
+    , m_Model(new /*BoxModel()*//*HillsModel()*/ShapesModel()), m_ColorShader(new ColorShader())
+    , m_Theta(1.5f * MathHelper::Pi), m_Phi(/*0.25f*/0.1f * MathHelper::Pi), m_Radius(/*5.0f*//*200.0f*/15.0f)
 {
     //m_MainWndCaption = L"Box Demo";
-    m_MainWndCaption = L"Hills Demo";
+    //m_MainWndCaption = L"Hills Demo";
+    m_MainWndCaption = L"Shapes Demo";
 
     m_LastMousePos.x = 0;
     m_LastMousePos.y = 0;
@@ -70,6 +71,7 @@ void DrawingApp::DrawScene()
     m_D3DDeviceContext->ClearRenderTargetView(m_RenderTargetView, reinterpret_cast<const float*>(&Colors::LightSteelBlue));
     m_D3DDeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+    /*
     m_MatrixBuffer.world = m_WorldMatrix;
     // m_MatrixBuffer.projection is updated in OnResize()
     // m_MatrixBuffer.view is updated in UpdateScene()
@@ -78,6 +80,35 @@ void DrawingApp::DrawScene()
 
     m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_MatrixBuffer.world, m_MatrixBuffer.view, m_MatrixBuffer.projection);
     m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetIndexCount());
+    */
+
+    m_Model->RenderBuffers(m_D3DDeviceContext);
+
+    // Draw the grid
+    m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetGridWorld(), m_MatrixBuffer.view, m_MatrixBuffer.projection);
+    m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetGridIndexCount(), m_Model->GetGridIndexOffset(), m_Model->GetGridVertexOffset());
+
+    // Draw the box
+    m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetBoxWorld(), m_MatrixBuffer.view, m_MatrixBuffer.projection);
+    m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetBoxIndexCount(), m_Model->GetBoxIndexOffset(), m_Model->GetBoxVertexOffset());
+
+    // Draw center sphere
+    m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetCenterSphereWorld(), m_MatrixBuffer.view, m_MatrixBuffer.projection);
+    m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetSphereIndexCount(), m_Model->GetSphereIndexOffset(), m_Model->GetSphereVertexOffset());
+
+    // Draw the cylinders
+    for (int i = 0; i < 10; i++)
+    {
+        m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetCylWorld()[i], m_MatrixBuffer.view, m_MatrixBuffer.projection);
+        m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetCylinderIndexCount(), m_Model->GetCylinderIndexOffset(), m_Model->GetCylinderVertexOffset());
+    }
+
+    // Draw the spheres
+    for (int i = 0; i < 10; i++)
+    {
+        m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetSphereWorld()[i], m_MatrixBuffer.view, m_MatrixBuffer.projection);
+        m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetSphereIndexCount(), m_Model->GetSphereIndexOffset(), m_Model->GetSphereVertexOffset());
+    }    
 
     // End Scene
     if (m_VSyncEnabled)
@@ -121,14 +152,14 @@ void DrawingApp::OnMouseMove(WPARAM btnState, int x, int y)
     else if ((btnState & MK_RBUTTON) != 0)
     {
         // Make each pixel correspond to 0.005 unit in the scene.
-        float dx = /*0.005f*/0.2f * static_cast<float>(x - m_LastMousePos.x);
-        float dy = /*0.005f*/0.2f * static_cast<float>(y - m_LastMousePos.y);
+        float dx = /*0.005f*//*0.2f*/0.01f * static_cast<float>(x - m_LastMousePos.x);
+        float dy = /*0.005f*//*0.2f*/0.01f * static_cast<float>(y - m_LastMousePos.y);
 
         // Update the camera radius based on input.
         m_Radius -= dx - dy;
 
         // Restrict the radius.
-        m_Radius = MathHelper::Clamp(m_Radius, /*3.0f*/50.0f, /*15.0f*/500.0f);
+        m_Radius = MathHelper::Clamp(m_Radius, /*3.0f*//*50.0f*/3.0f, /*15.0f*//*500.0f*/200.0f);
     }
 
     m_LastMousePos.x = x;
