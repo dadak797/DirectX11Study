@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SkullModel.cpp" />
     <ClCompile Include="src\ShapesModel.cpp" />
     <ClCompile Include="src\GeometryGenerator.cpp" />
     <ClCompile Include="src\HillsModel.cpp" />
@@ -141,8 +142,11 @@
     <ClCompile Include="src\D3DUtil.cpp" />
     <ClCompile Include="src\GameTimer.cpp" />
     <ClCompile Include="src\MathHelper.cpp" />
+    <ClCompile Include="src\WaveModel.cpp" />
+    <ClCompile Include="src\Waves.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SkullModel.h" />
     <ClInclude Include="src\ShapesModel.h" />
     <ClInclude Include="src\GeometryGenerator.h" />
     <ClInclude Include="src\HillsModel.h" />
@@ -153,6 +157,8 @@
     <ClInclude Include="src\D3DUtil.h" />
     <ClInclude Include="src\GameTimer.h" />
     <ClInclude Include="src\MathHelper.h" />
+    <ClInclude Include="src\WaveModel.h" />
+    <ClInclude Include="src\Waves.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

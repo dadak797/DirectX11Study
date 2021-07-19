@@ -1,3 +1,7 @@
+//***************************************************************************************
+// GeometryGenerator.cpp by Frank Luna (C) 2011 All Rights Reserved.
+//***************************************************************************************
+
 #include "GeometryGenerator.h"
 #include "MathHelper.h"
 

@@ -4,12 +4,14 @@
 
 DrawingApp::DrawingApp(HINSTANCE hInstance)
     : D3DApp(hInstance)
-    , m_Model(new /*BoxModel()*//*HillsModel()*/ShapesModel()), m_ColorShader(new ColorShader())
-    , m_Theta(1.5f * MathHelper::Pi), m_Phi(/*0.25f*/0.1f * MathHelper::Pi), m_Radius(/*5.0f*//*200.0f*/15.0f)
+    , m_Model(new /*BoxModel()*//*HillsModel()*//*ShapesModel()*//*SkullModel()*/WaveModel()), m_ColorShader(new ColorShader())
+    , m_Theta(1.5f * MathHelper::Pi), m_Phi(/*0.25f*/0.1f * MathHelper::Pi), m_Radius(/*5.0f*//*200.0f*//*15.0f*//*20.0f*/200.0f)
 {
     //m_MainWndCaption = L"Box Demo";
     //m_MainWndCaption = L"Hills Demo";
-    m_MainWndCaption = L"Shapes Demo";
+    //m_MainWndCaption = L"Shapes Demo";
+    //m_MainWndCaption = L"Skull Demo";
+    m_MainWndCaption = L"Wave Demo";
 
     m_LastMousePos.x = 0;
     m_LastMousePos.y = 0;
@@ -60,6 +62,28 @@ void DrawingApp::UpdateScene(float dt)
     XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
     m_MatrixBuffer.view = XMMatrixLookAtLH(pos, target, up);
+
+    // Start Wave Update with Time
+    // Every quarter second, generate a random wave.
+    static float t_base = 0.0f;
+    if ((m_Timer.TotalTime() - t_base) >= 0.25f)
+    {
+        t_base += 0.25f;
+
+        DWORD i = 5 + rand() % 190;
+        DWORD j = 5 + rand() % 190;
+
+        float r = MathHelper::RandF(1.0f, 2.0f);
+
+        m_Model->WaveDisturb(i, j, r);
+    }
+
+    m_Model->WaveUpdate(dt);
+
+    // Update the wave vertex buffer with the new solution.
+    m_Model->WaveVertexBufferUpdate(m_D3DDeviceContext);
+
+    // End Wave Update
 }
 
 void DrawingApp::DrawScene()
@@ -82,6 +106,7 @@ void DrawingApp::DrawScene()
     m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetIndexCount());
     */
 
+    /*
     m_Model->RenderBuffers(m_D3DDeviceContext);
 
     // Draw the grid
@@ -109,7 +134,22 @@ void DrawingApp::DrawScene()
         m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetSphereWorld()[i], m_MatrixBuffer.view, m_MatrixBuffer.projection);
         m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetSphereIndexCount(), m_Model->GetSphereIndexOffset(), m_Model->GetSphereVertexOffset());
     }    
+    */
 
+    //m_Model->RenderBuffers(m_D3DDeviceContext);
+    //m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetSkullWorld(), m_MatrixBuffer.view, m_MatrixBuffer.projection);
+    //m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetIndexCount());
+
+    // Draw the grid
+    m_Model->RenderGridBuffers(m_D3DDeviceContext);
+    m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetGridWorld(), m_MatrixBuffer.view, m_MatrixBuffer.projection);
+    m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetGridIndexCount());
+
+    // Draw the waves
+    m_Model->RenderWavesBuffers(m_D3DDeviceContext);
+    m_ColorShader->SetShaderParameters(m_D3DDeviceContext, m_Model->GetWavesWorld(), m_MatrixBuffer.view, m_MatrixBuffer.projection);
+    m_ColorShader->RenderShader(m_D3DDeviceContext, m_Model->GetWavesIndexCount());
+    
     // End Scene
     if (m_VSyncEnabled)
     {
