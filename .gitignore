@@ -5,6 +5,9 @@ InitDirect3D/bin-int/
 DrawingExamples/.vs/
 DrawingExamples/bin/
 DrawingExamples/bin-int/
+LightingExamples/.vs/
+LightingExamples/bin/
+LightingExamples/bin-int/
 
 # Files
 *.user
